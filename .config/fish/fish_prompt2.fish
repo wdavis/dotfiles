@@ -44,7 +44,7 @@ function fish_prompt
     end
     printf ' %s' (prompt_pwd)
     set_color normal
-    #printf '%s' (__fish_git_prompt)
-    printf '%s ' ':'
+    printf '%s' (__fish_git_prompt)
+    printf ' %s ' ':'
     set_color normal
 end
