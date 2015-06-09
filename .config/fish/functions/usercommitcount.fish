@@ -1,3 +1,3 @@
 function usercommitcount
-	git shortlog | grep -E '^[^ ]'
+	git shortlog -s -n --all
 end

@@ -26,16 +26,34 @@ set __fish_test_thing_two 'two'
 
 function fish_prompt
     
+	set -l last_status $status
+
     if not set -q __fish_prompt_hostname
 		set -g __fish_prompt_hostname (hostname|cut -d . -f 1)
 	end
+	if not set -q ppid
+		set -g ppid (ps -p %self -o 'ppid=' | xargs)
+	end
 
-    set last_status $status
+	if not set -q session_type
+		if begin test -n "$SSH_CLIENT"; or test -n "$SSH_TTY"; end
+			set -g session_type "remote/ssh"
+		else
+			switch (ps -o comm= -p $ppid)
+				case sshd
+					set -g session_type "remote/ssh"
+			end
+
+		end
+	end
+
     printf '%s' "$USER"
-    set_color yellow
-    printf '%s' "@"
-    set_color 336
-	printf '%s' "$__fish_prompt_hostname"
+    if [ "$session_type" = "remote/ssh" ]
+        set_color yellow
+    	printf '%s' "@"
+	    set_color 336
+		printf '%s' "$__fish_prompt_hostname"
+    end
     set_color $fish_color_cwd
     if test -w (pwd)
     	set_color green
@@ -45,6 +63,14 @@ function fish_prompt
     printf ' %s' (prompt_pwd)
     set_color normal
     printf '%s' (__fish_git_prompt)
-    printf ' %s ' ':'
+    if [ (math "$last_status>0") = 1 ]
+    	set_color red
+    	printf ' %s' "$last_status"
+	end
+	if set -q CMD_DURATION
+		set_color magenta
+		printf ' %s' $CMD_DURATION
+	end
     set_color normal
+    printf ' %s ' ':'
 end
