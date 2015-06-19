@@ -24,6 +24,11 @@
 	amend = commit -a --amend
 	st = status -s
 
+	psm = push origin master
+	ps = push origin
+	plm = pull origin master
+	pl = pull origin
+
 	# Take current changes and apply them to previous commit
 	caa = commit -a --amend -C HEAD
 
