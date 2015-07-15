@@ -67,14 +67,16 @@ function fish_prompt
     	set_color red
     	printf ' %s' "$last_status"
 	end
-	if [ (math "$CMD_DURATION>1000") = 1 ]
-		set_color magenta
-		if [ (math "$CMD_DURATION>60000") = 1 ]
-			set -l out (echo "scale=2;$CMD_DURATION/60000" | bc)
-			printf ' %sm' "$out"
-		else if [ (math "$CMD_DURATION>1000") = 1 ]
-			set -l out (echo "scale=2;$CMD_DURATION/1000" | bc)
-			printf ' %ss' "$out" 
+	if set -q CMD_DURATION
+		if [ (math "$CMD_DURATION>1000") = 1 ]
+			set_color magenta
+			if [ (math "$CMD_DURATION>60000") = 1 ]
+				set -l out (echo "scale=2;$CMD_DURATION/60000" | bc)
+				printf ' %sm' "$out"
+			else if [ (math "$CMD_DURATION>1000") = 1 ]
+				set -l out (echo "scale=2;$CMD_DURATION/1000" | bc)
+				printf ' %ss' "$out" 
+			end
 		end
 	end
     set_color normal
